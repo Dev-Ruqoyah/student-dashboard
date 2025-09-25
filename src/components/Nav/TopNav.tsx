@@ -15,22 +15,6 @@ const TopNavBar = ({ toggleSidebar }: TopNavBarProps) => {
     setUserDetails(user?.user_metadata)
   },[])
   
-  // useEffect(() => {
-  //   const fetchUserDetails = async () => {
-  //     if (user) {
-  //       const { data, error } = await supabase
-  //         .from("profiles")
-  //         .select("first_name, last_name, avatar_url")
-  //         .eq("id", user.id)
-  //         .single();
-
-  //       if (!error && data) {
-  //         setUserDetails(data);
-  //       }
-  //     }
-  //   };
-  //   fetchUserDetails();
-  // }, []);
 
   return (
     <header className="flex items-center justify-between bg-white text-primary px-6 py-3 shadow-md border-b border-gray-200">

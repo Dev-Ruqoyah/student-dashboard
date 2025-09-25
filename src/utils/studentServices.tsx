@@ -5,3 +5,19 @@ export const getCourses = async () => {
   if (error) throw error;
   return data;
 };
+
+export const getProfileData = async (userId: string|undefined) => {
+  const { data: profiles, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", userId)
+    .single();
+
+  if (profiles) {
+    console.log(profiles)
+    return profiles;
+  }
+  if (error) {
+    console.error(error);
+  }
+};

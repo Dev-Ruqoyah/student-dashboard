@@ -1,12 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEdit, FaKey, FaSave } from "react-icons/fa";
 import { FaShield, FaX } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { getProfileData } from "../../../utils/studentServices";
+import { useAuth } from "../../../contexts/useAuthContext";
 
+interface profileProps {
+  first_name: string;
+  profile_url:string;
+  last_name: string;
+  bio: string;
+  academic_advisor: string;
+  date_of_birth: string;
+  emergency_contact: number;
+  is_updated: number;
+  major:string;
+  minor:string;
+  role:string;
+  tel_phone:number;
 
+}
 const ProfileEdit = () => {
   const [preview, setPreview] = useState<string | null>(null);
-  
+  const { user } = useAuth();
+
+  const [userInitialData, setUserInitialData] = useState<profileProps>({});
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -14,10 +32,17 @@ const ProfileEdit = () => {
       const fileUrl = URL.createObjectURL(e.target.files[0]);
       setPreview(fileUrl);
       console.log("Clicked");
-      
     }
   };
 
+  const getUserProfile = async () => {
+    const response = await getProfileData(user?.id);
+    console.log(response);
+  };
+
+  useEffect(() => {
+    getUserProfile();
+  }, []);
 
   return (
     <>
@@ -40,13 +65,17 @@ const ProfileEdit = () => {
                 <div className="flex items-center gap-3">
                   <Link to={"/profile/edit"}>
                     <button className="flex cursor-pointer items-center gap-2 p-2 px-2 border border-primary text-primary rounded-md">
-                      <span><FaX/></span>
+                      <span>
+                        <FaX />
+                      </span>
                     </button>
                   </Link>
 
                   <Link to={"/profile/edit"}>
                     <button className="flex cursor-pointer items-center gap-2 p-2 px-2 bg-primary text-neutral rounded-md">
-                      <span><FaSave/></span>
+                      <span>
+                        <FaSave />
+                      </span>
                     </button>
                   </Link>
                 </div>

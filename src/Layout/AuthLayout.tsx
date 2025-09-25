@@ -15,7 +15,7 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
   // open mobile overlay: mount then open (next frame) to trigger transition
   const openMobile = () => {
     setMobileMounted(true);
-    // next tick/frame — allow initial DOM paint with -translate-x-full, then flip to 0
+    
     requestAnimationFrame(() => setMobileOpen(true));
   };
 

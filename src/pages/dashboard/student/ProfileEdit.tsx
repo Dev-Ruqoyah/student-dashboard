@@ -2,30 +2,50 @@ import React, { useEffect, useState } from "react";
 import { FaEdit, FaKey, FaSave } from "react-icons/fa";
 import { FaShield, FaX } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import { getProfileData } from "../../../utils/studentServices";
+import {
+  getProfileData,
+  updateUserProfile,
+} from "../../../utils/studentServices";
 import { useAuth } from "../../../contexts/useAuthContext";
 
-interface profileProps {
+export interface profileProps {
   first_name: string;
-  profile_url:string;
+  profile_url: string;
   last_name: string;
+  email: string;
   bio: string;
   academic_advisor: string;
   date_of_birth: string;
-  emergency_contact: number;
+  emergency_contact: string;
   is_updated: number;
-  major:string;
-  minor:string;
-  role:string;
-  tel_phone:number;
-
+  major: string;
+  minor: string;
+  role: string;
+  tel_phone: string;
+  current_year: string;
 }
 const ProfileEdit = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const { user } = useAuth();
 
-  const [userInitialData, setUserInitialData] = useState<profileProps>({});
-
+  const [userInitialData, setUserInitialData] = useState<profileProps>({
+    first_name: "",
+    profile_url: "",
+    last_name: "",
+    email: "",
+    bio: "",
+    academic_advisor: "",
+    date_of_birth: "",
+    emergency_contact: "" ,
+    is_updated: 1,
+    major: "",
+    minor: "",
+    role: "",
+    tel_phone: "" ,
+    current_year: "",
+  });
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingUpdate,setLoadingUpdate] = useState(false)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       // create a temporary local URL for the uploaded image
@@ -35,14 +55,61 @@ const ProfileEdit = () => {
     }
   };
 
+  // Handle chage
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setUserInitialData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Handle user profile
   const getUserProfile = async () => {
-    const response = await getProfileData(user?.id);
-    console.log(response);
+    try {
+      setLoading(true);
+      const response = await getProfileData(user?.id);
+      if (response) {
+        setUserInitialData(response);
+      }
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      setLoadingUpdate(true);
+      if (!user?.id) throw new Error("User not logged in");
+
+      const { data, error } = await updateUserProfile(user.id, userInitialData);
+
+      if (error) {
+        console.error(error);
+      } else {
+        console.log("Profile updated successfully:", data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingUpdate(false);
+    }
   };
 
   useEffect(() => {
     getUserProfile();
   }, []);
+
+  if (loading) {
+    return <div>Loading</div>;
+  }
 
   return (
     <>
@@ -71,13 +138,16 @@ const ProfileEdit = () => {
                     </button>
                   </Link>
 
-                  <Link to={"/profile/edit"}>
-                    <button className="flex cursor-pointer items-center gap-2 p-2 px-2 bg-primary text-neutral rounded-md">
+                 
+                    <button
+                      onClick={handleSave}
+                      className="flex cursor-pointer items-center gap-2 p-2 px-2 bg-primary text-neutral rounded-md"
+                    >
                       <span>
                         <FaSave />
                       </span>
                     </button>
-                  </Link>
+                 
                 </div>
               </div>
 
@@ -118,36 +188,43 @@ const ProfileEdit = () => {
 
               <form className="">
                 <div className="grid md:grid-cols-2 gap-4 mt-8">
+                  {/* first name */}
                   <div>
                     <label
                       className="block text-sm  text-gray-700 mb-1"
-                      htmlFor="firstName"
+                      htmlFor="first_name"
                     >
                       First Name
                     </label>
                     <input
                       type="text"
-                      id="firstName"
-                      name="firstName"
+                      id="first_name"
+                      name="first_name"
                       className="w-full border border-gray-300 rounded-md p-2 focus:outline-primary"
                       placeholder="Enter first name"
+                      value={userInitialData.first_name ?? ""}
+                      readOnly
                     />
                   </div>
+                  {/* last name */}
                   <div>
                     <label
                       className="block text-sm  text-gray-700 mb-1"
-                      htmlFor="lastName"
+                      htmlFor="last_name"
                     >
                       Last Name
                     </label>
                     <input
                       type="text"
-                      id="lastName"
-                      name="lastName"
+                      id="last_name"
+                      name="last_name"
                       className="w-full border border-gray-300 rounded-md p-2 focus:outline-primary"
                       placeholder="Enter last name"
+                      value={userInitialData.last_name ?? ""}
+                      readOnly
                     />
                   </div>
+                  {/* email */}
                   <div>
                     <label
                       className="block text-sm  text-gray-700 mb-1"
@@ -161,8 +238,11 @@ const ProfileEdit = () => {
                       name="email"
                       className="w-full border border-gray-300 rounded-md p-2 focus:outline-primary"
                       placeholder="Enter email"
+                      value={userInitialData.email ?? ""}
+                      readOnly
                     />
                   </div>
+                  {/* phone */}
                   <div>
                     <label
                       className="block text-sm  text-gray-700 mb-1"
@@ -173,11 +253,14 @@ const ProfileEdit = () => {
                     <input
                       type="tel"
                       id="phone"
-                      name="phone"
+                      name="tel_phone"
                       className="w-full border border-gray-300 rounded-md p-2 focus:outline-primary"
                       placeholder="Enter phone number"
+                      value={userInitialData.tel_phone ?? ""}
+                      onChange={handleChange}
                     />
                   </div>
+                  {/* date of birth */}
                   <div>
                     <label
                       className="block text-sm  text-gray-700 mb-1"
@@ -187,27 +270,35 @@ const ProfileEdit = () => {
                     </label>
                     <input
                       type="date"
-                      id="dob"
-                      name="dob"
+                      id="date_of_birth"
+                      name="date_of_birth"
                       className="w-full border border-gray-300 rounded-md p-2 focus:outline-primary"
+                      value={userInitialData.date_of_birth ?? ""}
+                      onChange={handleChange}
                     />
                   </div>
+                      {/* emergency contact */}
                   <div>
                     <label
                       className="block text-sm  text-gray-700 mb-1"
-                      htmlFor="emergencyContact"
+                      htmlFor="emergency_contact"
                     >
-                      Emergency Contact Name
+                      Emergency Contact
                     </label>
                     <input
                       type="text"
-                      id="emergencyContact"
-                      name="emergencyContact"
+                      id="emergency_contact"
+                      name="emergency_contact"
                       className="w-full border border-gray-300 rounded-md p-2 focus:outline-primary"
-                      placeholder="Enter emergency contact name"
+                      placeholder="Enter emergency contact"
+                      value={userInitialData.emergency_contact ?? ""}
+                      onChange={handleChange}
                     />
                   </div>
+
                 </div>
+
+                {/* bio */}
                 <div>
                   <label
                     className="block text-sm  text-gray-700 mb-1"
@@ -221,6 +312,8 @@ const ProfileEdit = () => {
                     className="w-full border border-gray-300 rounded-md p-2 focus:outline-primary"
                     placeholder="Enter your bio"
                     rows={3}
+                    value={userInitialData.bio ?? ""}
+                    onChange={handleChange}
                   />
                 </div>
               </form>
@@ -241,7 +334,9 @@ const ProfileEdit = () => {
                     </label>
                     <select
                       name="major"
-                      id=""
+                      id="major"
+                      value={userInitialData.major}
+                      onChange={handleChange}
                       className="w-full border border-gray-300 rounded-md p-2 focus:outline-primary"
                     >
                       <option value="Computer Science">Computer Science</option>
@@ -251,13 +346,15 @@ const ProfileEdit = () => {
                   </div>
                   <div>
                     <label
-                      htmlFor="major"
+                      htmlFor="minor"
                       className="block text-sm  text-gray-700 mb-1"
                     >
                       Minor
                     </label>
                     <select
-                      name="major"
+                      name="minor"
+                      value={userInitialData.minor}
+                      onChange={handleChange}
                       id=""
                       className="w-full border border-gray-300 rounded-md p-2 focus:outline-primary"
                     >
@@ -275,9 +372,11 @@ const ProfileEdit = () => {
                       Year
                     </label>
                     <select
-                      name="major"
-                      id=""
+                      name="current_year"
+                      id="current_year"
                       className="w-full border border-gray-300 rounded-md p-2 focus:outline-primary"
+                      value={userInitialData.current_year ?? ""}
+                      onChange={handleChange}
                     >
                       <option value="Freshman">Freshman</option>
                       <option value="Sophomore">Sophomore</option>
@@ -298,6 +397,9 @@ const ProfileEdit = () => {
                       type="text"
                       className="w-full border border-gray-300 rounded-md p-2 focus:outline-primary"
                       placeholder="Dr. Michael Chen"
+                      name="academic_advisor"
+                      value={userInitialData.academic_advisor}
+                      onChange={handleChange}
                     />
                   </div>
                 </div>

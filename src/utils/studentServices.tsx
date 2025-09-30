@@ -1,3 +1,4 @@
+import type { profileProps } from "../pages/dashboard/student/ProfileEdit";
 import { supabase } from "../supabaseClient";
 
 export const getCourses = async () => {
@@ -21,3 +22,25 @@ export const getProfileData = async (userId: string|undefined) => {
     console.error(error);
   }
 };
+
+
+
+export const updateUserProfile = async (userId: string, profileData: Partial<profileProps>) => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .update(profileData)       
+    .eq("id", userId)          
+    .select();
+
+  if (data) {
+    console.log("Updated profile:", data);
+  }
+
+  if (error) {
+    console.error("Error updating profile:", error);
+  }
+
+  return { data, error };
+};
+
+

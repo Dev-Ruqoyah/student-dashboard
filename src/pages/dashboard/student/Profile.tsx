@@ -1,7 +1,52 @@
+import { useEffect, useState } from "react";
 import { FaAward, FaCamera, FaEdit, FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { getProfileData } from "../../../utils/studentServices";
+import { useAuth } from "../../../contexts/useAuthContext";
+import type { profileProps } from "./ProfileEdit";
+import { useLoading } from "../../../contexts/useLoadingContext";
 
 const Profile = () => {
+  const [userProfileData, setUserProfileData] = useState<profileProps>({
+    first_name: "",
+    profile_url: "",
+    last_name: "",
+    email: "",
+    bio: "",
+    academic_advisor: "",
+    date_of_birth: "",
+    emergency_contact: "",
+    is_updated: 1,
+    major: "",
+    minor: "",
+    role: "",
+    tel_phone: "",
+    current_year: "",
+  });
+  // const [loading, setLoading] = useState<boolean>(false);
+  const { user } = useAuth();
+  const {setLoading}= useLoading()
+  // Handle user profile
+  const getUserProfile = async () => {
+    try {
+      setLoading(true);
+      const response = await getProfileData(user?.id);
+      if (response) {
+        setUserProfileData(response);
+      }
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getUserProfile();
+  }, []);
+
+
   return (
     <>
       <div className="">
@@ -55,15 +100,16 @@ const Profile = () => {
                   </label>
                 </div>
                 <div>
-                  <h3 className="text-xl">Hamzat Rukayat</h3>
-                  <p className="text-base">Computer Science Major</p>
-                  <span>Studend ID : CS2025001</span>
+                  <h3 className="text-xl font-semibold">{userProfileData.last_name} {userProfileData.first_name}</h3>
+                  <p className="text-base">{userProfileData.major} Major</p>
+                  <span>Studend ID : 2025001</span>
                 </div>
               </div>
 
               {/* info form */}
               <form className="">
                 <div className="grid grid-cols-2 gap-4 py-4 mt-8">
+                  {/* first name */}
                   <div>
                     <label
                       className="block text-sm  text-gray-700 mb-1"
@@ -76,9 +122,12 @@ const Profile = () => {
                       id="firstName"
                       name="firstName"
                       className="w-full  outline-0 bg-gray-100  rounded-md p-2 "
-                      defaultValue={"Rukayat"}
+                      defaultValue={userProfileData.first_name}
+                      readOnly
                     />
                   </div>
+
+                  {/* last name */}
                   <div>
                     <label
                       className="block text-sm  text-gray-700 mb-1"
@@ -91,9 +140,12 @@ const Profile = () => {
                       id="lastName"
                       name="lastName"
                       className="w-full  outline-0 bg-gray-100  rounded-md p-2 "
-                      defaultValue={"Hamzat"}
+                      defaultValue={userProfileData.last_name}
+                      readOnly
                     />
                   </div>
+
+                  {/* email */}
                   <div>
                     <label
                       className="block text-sm  text-gray-700 mb-1"
@@ -106,9 +158,12 @@ const Profile = () => {
                       id="email"
                       name="email"
                       className="w-full  outline-0 bg-gray-100  rounded-md p-2 "
-                      defaultValue={"hamzatrukayat23@gmail.com"}
+                      defaultValue={userProfileData.email}
+                      readOnly
                     />
                   </div>
+
+                  {/* tel_phone */}
                   <div>
                     <label
                       className="block text-sm  text-gray-700 mb-1"
@@ -121,9 +176,12 @@ const Profile = () => {
                       id="phone"
                       name="phone"
                       className="w-full outline-0 bg-gray-100  rounded-md p-2 "
-                      defaultValue={"+2345678902"}
+                       defaultValue={userProfileData.tel_phone}
+                      readOnly
                     />
                   </div>
+
+                  {/* DOB */}
                   <div>
                     <label
                       className="block text-sm  text-gray-700 mb-1"
@@ -136,9 +194,12 @@ const Profile = () => {
                       id="dob"
                       name="dob"
                       className="w-full outline-0 bg-gray-100  rounded-md p-2 "
-                      defaultValue={"12/12/2003"}
+                       defaultValue={userProfileData.date_of_birth}
+                      readOnly
                     />
                   </div>
+
+                  {/* current year */}
                   <div>
                     <label
                       className="block text-sm  text-gray-700 mb-1"
@@ -151,11 +212,11 @@ const Profile = () => {
                       id="emergencyContact"
                       name="emergencyContact"
                       className="w-full outline-0 bg-gray-100  rounded-md p-2 "
-                      defaultValue={"Sophomore"}
+                       defaultValue={userProfileData.current_year}
+                      readOnly
                     />
                   </div>
                 </div>
-              
               </form>
             </div>
 
@@ -165,6 +226,8 @@ const Profile = () => {
 
               <form action="">
                 <div className="grid grid-cols-2 gap-4 mt-8 py-4">
+
+                  {/* major */}
                   <div>
                     <label
                       htmlFor="major"
@@ -172,14 +235,17 @@ const Profile = () => {
                     >
                       Major
                     </label>
-                     <input
+                    <input
                       type="text"
                       id="firstName"
                       name="firstName"
                       className="w-full  outline-0 bg-gray-100  rounded-md p-2 "
-                      defaultValue={"Computer Science"}
+                       defaultValue={userProfileData.major}
+                      readOnly
                     />
                   </div>
+
+                  {/* minor */}
                   <div>
                     <label
                       htmlFor="major"
@@ -187,15 +253,17 @@ const Profile = () => {
                     >
                       Minor
                     </label>
-                  <input
+                    <input
                       type="text"
                       id="firstName"
                       name="firstName"
                       className="w-full  outline-0 bg-gray-100  rounded-md p-2 "
-                      defaultValue={"Mathematics"}
+                       defaultValue={userProfileData.minor}
+                      readOnly
                     />
                   </div>
-
+                    
+                    {/* GPA */}
                   <div>
                     <label
                       htmlFor="major"
@@ -209,9 +277,11 @@ const Profile = () => {
                       name="firstName"
                       className="w-full  outline-0 bg-gray-100  rounded-md p-2 "
                       defaultValue={"3.45"}
+                      readOnly
                     />
                   </div>
 
+                    {/* academic advisor */}
                   <div>
                     <label
                       htmlFor="academicAdvisor"
@@ -220,12 +290,13 @@ const Profile = () => {
                       {" "}
                       Academic Advisor
                     </label>
-                     <input
+                    <input
                       type="text"
                       id="firstName"
                       name="firstName"
                       className="w-full  outline-0 bg-gray-100  rounded-md p-2 "
-                      defaultValue={"Dr Rukayat"}
+                       defaultValue={userProfileData.academic_advisor}
+                      readOnly
                     />
                   </div>
 
@@ -235,31 +306,34 @@ const Profile = () => {
                       className="block text-sm  text-gray-700 mb-1"
                     >
                       {" "}
-                     Credits Completed
+                      Credits Completed
                     </label>
-                     <input
+                    <input
                       type="text"
                       id="firstName"
                       name="firstName"
                       className="w-full  outline-0 bg-gray-100  rounded-md p-2 "
-                      defaultValue={"48/120"}
+                      defaultValue={"90/120"}
+                      readOnly
                     />
                   </div>
 
+                    {/* EXPECTED graduation */}
                   <div>
                     <label
                       htmlFor="academicAdvisor"
                       className="block text-sm  text-gray-700 mb-1"
                     >
                       {" "}
-                    Expected Graduation
+                      Expected Graduation
                     </label>
-                     <input
+                    <input
                       type="text"
                       id="firstName"
                       name="firstName"
                       className="w-full  outline-0 bg-gray-100  rounded-md p-2 "
                       defaultValue={"May 2027"}
+                      readOnly
                     />
                   </div>
                 </div>
@@ -301,7 +375,9 @@ const Profile = () => {
                   </span>
                   <div>
                     <span className="font-medium">Dean's List</span>
-                    <span className="block text-sm text-gray-500">Fall 2024</span>
+                    <span className="block text-sm text-gray-500">
+                      Fall 2024
+                    </span>
                   </div>
                 </li>
                 <li className="flex items-center gap-3">
@@ -310,16 +386,20 @@ const Profile = () => {
                   </span>
                   <div>
                     <span className="font-medium">Outstanding Student</span>
-                    <span className="block text-sm text-gray-500">Spring 2024</span>
+                    <span className="block text-sm text-gray-500">
+                      Spring 2024
+                    </span>
                   </div>
                 </li>
                 <li className="flex items-center gap-3">
                   <span className="bg-primary text-white rounded-full p-2">
-                   <FaAward/>
+                    <FaAward />
                   </span>
                   <div>
                     <span className="font-medium">Perfect Attendance</span>
-                    <span className="block text-sm text-gray-500">Fall 2024</span>
+                    <span className="block text-sm text-gray-500">
+                      Fall 2024
+                    </span>
                   </div>
                 </li>
               </ul>

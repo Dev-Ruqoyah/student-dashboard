@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaKey, FaSave } from "react-icons/fa";
 import { FaShield, FaX } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   getProfileData,
   updateUserProfile,
 } from "../../../utils/studentServices";
 import { useAuth } from "../../../contexts/useAuthContext";
+import { toast } from "react-toastify";
+import { useLoading } from "../../../contexts/useLoadingContext";
 
 export interface profileProps {
   first_name: string;
@@ -27,7 +29,7 @@ export interface profileProps {
 const ProfileEdit = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const { user } = useAuth();
-
+  const navigate = useNavigate()
   const [userInitialData, setUserInitialData] = useState<profileProps>({
     first_name: "",
     profile_url: "",
@@ -44,7 +46,7 @@ const ProfileEdit = () => {
     tel_phone: "" ,
     current_year: "",
   });
-  const [loading, setLoading] = useState<boolean>(false);
+  const { setLoading} = useLoading()
   const [loadingUpdate,setLoadingUpdate] = useState(false)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -89,15 +91,23 @@ const ProfileEdit = () => {
       setLoadingUpdate(true);
       if (!user?.id) throw new Error("User not logged in");
 
-      const { data, error } = await updateUserProfile(user.id, userInitialData);
+      const updatedData = {
+        ...userInitialData, is_updated:1
+      }
+
+      const { data, error } = await updateUserProfile(user.id, updatedData);
 
       if (error) {
         console.error(error);
       } else {
         console.log("Profile updated successfully:", data);
+        toast.success("Profile Updated successfully")
+        navigate("/profile")
+        
       }
     } catch (err) {
       console.error(err);
+      toast.error("Error occured while updating profile")
     } finally {
       setLoadingUpdate(false);
     }
@@ -107,9 +117,6 @@ const ProfileEdit = () => {
     getUserProfile();
   }, []);
 
-  if (loading) {
-    return <div>Loading</div>;
-  }
 
   return (
     <>
@@ -130,7 +137,7 @@ const ProfileEdit = () => {
               <div className="flex justify-between items-center">
                 <p className="font-medium text-lg">Profile Information</p>
                 <div className="flex items-center gap-3">
-                  <Link to={"/profile/edit"}>
+                  <Link to={"/profile"}>
                     <button className="flex cursor-pointer items-center gap-2 p-2 px-2 border border-primary text-primary rounded-md">
                       <span>
                         <FaX />

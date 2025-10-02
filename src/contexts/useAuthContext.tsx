@@ -13,7 +13,7 @@ interface AuthContextType {
   role: string;
   session: Session | null;
   loading: boolean;
-  isUpdated: number;
+  isUpdated: number | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return stored ? JSON.parse(stored) : null;
   });
   const [loading, setLoading] = useState(true);
-  const [isUpdated, setUpdated] = useState<number>(0);
+  const [isUpdated, setUpdated] = useState<number | null>(null);
 
   // fetch user update
   const fetchProfile = async (userId: string) => {
@@ -62,6 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(data.session?.user ?? null);
       setRole(data.session?.user?.user_metadata?.role ?? "");
       localStorage.setItem("auth-session", JSON.stringify(data.session)); // ✅ consistent key
+      
     } else {
       localStorage.removeItem("auth-session");
     }
@@ -85,8 +86,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (session) {
         localStorage.setItem("auth-session", JSON.stringify(session));
+          fetchProfile(session.user.id);
       } else {
         localStorage.removeItem("auth-session");
+        setUpdated(null);
       }
     });
 

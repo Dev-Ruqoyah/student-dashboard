@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import type { CourseCardProps } from "../../../components/card/courseCard";
 import CourseCard from "../../../components/card/courseCard";
 import { getCourses } from "../../../utils/studentServices";

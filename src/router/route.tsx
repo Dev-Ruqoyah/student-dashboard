@@ -2,9 +2,15 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { AuthSignIn, protectedRoutes } from ".";
 import { useAuth } from "../contexts/useAuthContext";
 import AuthLayout from "../Layout/AuthLayout";
+import LoadingScreen from "../components/Loader/SpinnerLoader";
 
 const AppRouter = () => {
-  const { session, role,  isUpdated } = useAuth();
+  const { session, role, isUpdated, loading } = useAuth();
+  // console.log(isUpdated);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Routes>
@@ -24,8 +30,9 @@ const AppRouter = () => {
           path={route.path}
           element={
             session ? (
-              // If not updated and trying to access something other than /profile/edit → redirect
-              isUpdated === 0 && route.path !== "/profile/edit" ? (
+              isUpdated === null ? (
+                <LoadingScreen/>
+              ) : isUpdated === 0 && route.path !== "/profile/edit" ? (
                 <Navigate to="/profile/edit" replace />
               ) : route.role && route.role.includes(role) ? (
                 <AuthLayout>{route.element}</AuthLayout>
@@ -33,12 +40,7 @@ const AppRouter = () => {
                 <Navigate to="/unauthorized" replace />
               )
             ) : (
-              <Navigate
-                to={{
-                  pathname: "/auth/sign-in",
-                  search: `?redirectTo=${route.path}`,
-                }}
-              />
+              <Navigate to={`/auth/sign-in?redirectTo=${route.path}`} />
             )
           }
         />

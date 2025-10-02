@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { FaEdit, FaKey, FaSave } from "react-icons/fa";
 import { FaShield, FaX } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,7 +8,6 @@ import {
 } from "../../../utils/studentServices";
 import { useAuth } from "../../../contexts/useAuthContext";
 import { toast } from "react-toastify";
-import { useLoading } from "../../../contexts/useLoadingContext";
 
 export interface profileProps {
   first_name: string;
@@ -46,7 +45,8 @@ const ProfileEdit = () => {
     tel_phone: "" ,
     current_year: "",
   });
-  const { setLoading} = useLoading()
+  // const { setLoading} = useLoading()
+  const [loading,setLoading] = useState<boolean>(false)
   const [loadingUpdate,setLoadingUpdate] = useState(false)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -78,7 +78,7 @@ const ProfileEdit = () => {
       if (response) {
         setUserInitialData(response);
       }
-      console.log(response);
+      // console.log(response);
     } catch (err) {
       console.error(err);
     } finally {

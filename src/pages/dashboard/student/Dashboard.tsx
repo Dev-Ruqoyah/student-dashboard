@@ -13,14 +13,11 @@ import { MdOutlinePendingActions } from "react-icons/md";
 import { supabase } from "../../../supabaseClient";
 
 const Dashboard = () => {
-  const { user, role } = useAuth();
-  console.log("User Role:", role);
-  console.log("User Info:", user);
+  const { user } = useAuth();
   const [userDetails, setUserDetails] = React.useState<any>(null);
   useEffect(() => {
     const fetchUserDetails = async () => {
       if (user) {
-        console.log(user.user_metadata);
         setUserDetails(user.user_metadata);
       }
     };

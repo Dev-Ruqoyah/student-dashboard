@@ -89,9 +89,9 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
         </main>
 
         {/* Footer */}
-        <footer className="p-4 text-center bg-secondary/10">
+        {/* <footer className="p-4 text-center bg-secondary/5">
           &copy; {new Date().getFullYear()} My Dashboard. All rights reserved.
-        </footer>
+        </footer> */}
       </div>
     </div>
   );

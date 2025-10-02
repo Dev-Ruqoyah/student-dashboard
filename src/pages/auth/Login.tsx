@@ -2,7 +2,6 @@ import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useAuth } from "../../contexts/useAuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import type { AuthError } from "@supabase/supabase-js";
@@ -28,10 +27,10 @@ const Login = () => {
       {/* Left Content */}
       <div className="hidden md:flex flex-col justify-center items-center bg-gradient-to-br from-secondary to-primary text-white p-12">
         <div className="max-w-md text-center">
-          <h1 className="text-4xl font-bold mb-4">Welcome Back 👋</h1>
+          <h1 className="text-4xl font-bold mb-4">Welcome Back </h1>
           <p className="text-lg text-gray-100">
-            Sign in to your account and continue your journey with us. Manage
-            everything in one place with ease.
+            Sign in to your student account and continue your learning journey with us. Access your courses, assignments, and resources ,all in one place, with ease.
+
           </p>
           <img
             src="/assets/svg/illustration.svg"

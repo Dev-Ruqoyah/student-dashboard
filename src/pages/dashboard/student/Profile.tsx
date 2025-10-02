@@ -34,7 +34,7 @@ const Profile = () => {
       if (response) {
         setUserProfileData(response);
       }
-      console.log(response);
+      // console.log(response);
     } catch (err) {
       console.error(err);
     } finally {
@@ -59,8 +59,8 @@ const Profile = () => {
         </div>
 
         {/* Card body */}
-        <div className="grid grid-cols-6 mt-5 gap-5">
-          <div className="col-span-4">
+        <div className="grid md:grid-cols-6 mt-5 gap-5">
+          <div className="md:col-span-4">
             <div className="bg-white shadow-md p-8 rounded-md">
               {/* header */}
               <div className="flex justify-between items-center">
@@ -68,7 +68,7 @@ const Profile = () => {
 
                 <Link to={"/profile/edit"}>
                   <button className="flex cursor-pointer items-center gap-2 p-2 px-3 bg-primary text-neutral rounded-md">
-                    <FaEdit /> <span>Edit Profile</span>
+                    <FaEdit /> 
                   </button>
                 </Link>
               </div>
@@ -108,7 +108,7 @@ const Profile = () => {
 
               {/* info form */}
               <form className="">
-                <div className="grid grid-cols-2 gap-4 py-4 mt-8">
+                <div className="grid md:grid-cols-2 gap-4 py-4 mt-8">
                   {/* first name */}
                   <div>
                     <label
@@ -225,7 +225,7 @@ const Profile = () => {
               <p className="font-medium text-lg">Academic Information</p>
 
               <form action="">
-                <div className="grid grid-cols-2 gap-4 mt-8 py-4">
+                <div className="grid md:grid-cols-2 gap-4 mt-8 py-4">
 
                   {/* major */}
                   <div>

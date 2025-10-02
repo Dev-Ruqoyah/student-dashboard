@@ -28,10 +28,10 @@ const Register = () => {
       {/* Left Content */}
       <div className="hidden md:flex flex-col justify-center items-center bg-gradient-to-br from-secondary to-primary text-white p-12">
         <div className="max-w-md text-center">
-          <h1 className="text-4xl font-bold mb-4">Join Us 🚀</h1>
+          <h1 className="text-4xl font-bold mb-4">Join Us </h1>
           <p className="text-lg text-gray-100">
-            Create your account today and start managing everything in one place
-            with ease.
+            Create your student account today and begin managing your classes, assignments, and learning resources,all in one place, with ease.
+
           </p>
           <img
             src="/assets/svg/illustration.svg"

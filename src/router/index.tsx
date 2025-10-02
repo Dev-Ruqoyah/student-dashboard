@@ -6,6 +6,7 @@ import Unauthorized from "../pages/(other)/Unauthorized";
 import Courses from "../pages/dashboard/student/Courses";
 import Profile from "../pages/dashboard/student/Profile";
 import ProfileEdit from "../pages/dashboard/student/ProfileEdit";
+import NotFoundPage from "../pages/(other)/NotFound";
 
 export const AuthSignIn = [
   {
@@ -70,6 +71,12 @@ const Unauthorizedroute = [
     path: "/unauthorized",
     name: "Unauthorized",
     element: <Unauthorized />,
+    role: ["admin", "student", "null"],
+  },
+  {
+    path: "*",
+    name: "NotFound",
+    element: <NotFoundPage />,
     role: ["admin", "student", "null"],
   },
 ];

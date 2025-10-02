@@ -15,7 +15,7 @@ export const getProfileData = async (userId: string|undefined) => {
     .single();
 
   if (profiles) {
-    console.log(profiles)
+    // console.log(profiles)
     return profiles;
   }
   if (error) {
@@ -33,7 +33,7 @@ export const updateUserProfile = async (userId: string, profileData: Partial<pro
     .select();
 
   if (data) {
-    console.log("Updated profile:", data);
+    // console.log("Updated profile:", data);
   }
 
   if (error) {

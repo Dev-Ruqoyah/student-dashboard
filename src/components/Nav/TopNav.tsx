@@ -44,7 +44,6 @@ const TopNavBar = ({ toggleSidebar }: TopNavBarProps) => {
           <Bell size={20} />
           <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500"></span>
         </button>
-        <button className="cursor-pointer" onClick={()=>signOut()}>Logout</button>
 
         {/* Profile */}
         <div className="flex items-center gap-2 cursor-pointer hover:text-primary/70">

@@ -4,7 +4,10 @@ import {
   BookOpen,
   ClipboardList,
   User,
+  LogOut,
 } from "lucide-react";
+import { FaArrowAltCircleDown } from "react-icons/fa";
+import { signOut } from "../../contexts/useLoginService";
 
 const Sidebar = ({
   collapsed,
@@ -16,9 +19,9 @@ const Sidebar = ({
   const navItems = [
     { name: "Home", path: "/dashboard", icon: <LayoutDashboard size={18} /> },
     { name: "Courses", path: "/courses", icon: <BookOpen size={18} /> },
-    { name: "Assignments", path: "/dashboard/assignments", icon: <ClipboardList size={18} /> },
+    { name: "Assignments", path: "/assignments", icon: <ClipboardList size={18} /> },
     { name: "Profile", path: "/profile", icon: <User size={18} /> },
-    // {name:"Logout",path:"",icon:<FaArrowAltCircleDown size={18}/>}
+    // {name:"Logout",path:"/",icon:<FaArrowAltCircleDown size={18}/>}
   ];
 
   return (
@@ -59,6 +62,18 @@ const Sidebar = ({
           </NavLink>
         ))}
       </nav>
+
+          {/* Logout */}
+      <div className="p-4 border-t border-gray-200">
+        <button
+          onClick={() => signOut()}
+          className="flex items-center gap-3 w-full px-4 py-2 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 transition-all"
+        >
+          <LogOut size={18} />
+          {!collapsed && <span>Logout</span>}
+        </button>
+      </div>
+
     </aside>
   );
 };
